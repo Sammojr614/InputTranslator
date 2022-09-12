@@ -1,5 +1,9 @@
+from ctypes import resize
 import tkinter as tk
-from tkinter import NE, PhotoImage, filedialog, image_names
+from tkinter import *
+from turtle import clear
+from PIL import Image,ImageTk
+
 
 inputs = []
 number = []
@@ -18,6 +22,7 @@ show_input = tk.Label(canvas,text="Input Arrows: ")
 
 
 def numbTrans(numb):
+    global inputName
     if numb == 1:
         inputName = "Down Left"
     elif numb ==  2:
@@ -39,6 +44,7 @@ def numbTrans(numb):
     return inputName
 
 def letterTrans(letter):
+    global attackType
     if letter.lower() == "h":
         attackType = "Heavy"
     elif letter.lower() == "s":
@@ -62,6 +68,7 @@ def clearInputs():
     img_names.clear()
 
 def assignImage(inputName):
+    global img_names
     if inputName == "Down Left":
         img_names.append("Down_Left")
     elif inputName == "Down Right":
@@ -95,11 +102,20 @@ def translate():
     comboLabel.config(text="Full Combo: " + str(fullCombo))
     for numbInputs in inputs:
         assignImage(numbInputs)
+        index = 0
+    images = []
+    canvas.pack()
     for img_name in img_names:
-        filename = "C:/Users/sammo/Python/resoruces/{}.png".format(img_name)
-        img = PhotoImage(file=filename)
-        img.subsample(2,2)
-        canvas.create_image(150,200,image=img)
+        filename = f'C:/Users/epicz/Documents/GitHub/InputTranslator/resoruces/{img_name}.png'
+        img = (Image.open(filename))
+        resized_img = img.resize((25, 25), Image.ANTIALIAS)
+        new_img = ImageTk.PhotoImage(resized_img)
+        images.append(new_img)
+    for image in images:
+        canvas.create_image(225 + 25 * index,212,image=images[index])
+        index += 1
+    clearInputs()
+    root.mainloop()
     inputEntry.delete(0,tk.END)
 
 transBtn = tk.Button(canvas,text="Translate",command=translate)
